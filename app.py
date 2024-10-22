@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc
+from dash import html, dcc, dash_table
 import pandas as pd
 from stock_data import get_stock_data
 import time
@@ -19,7 +19,7 @@ log_entries = []
 global anObj
 anObj = callAngelAPI()
 
-# Function to log stock data every 5 minutes
+# Function to log stock data every 30 seconds
 def log_stock_data():
     while True:
         time.sleep(30)  # Sleep for 30 seconds
@@ -76,7 +76,39 @@ app.layout = html.Div(children=[
                 html.H2('Watchlist'),
                 dcc.Textarea(id='watchlist-input', value='ABB,BAJAJFIN', style={'width': '100%', 'height': 100}),
                 html.Button('Update Watchlist', id='watchlist-button', n_clicks=0),
-                html.Div(id='watchlist-output'),
+                
+                # Table for displaying watchlist data
+                dash_table.DataTable(
+                    id='watchlist-table',
+                    columns=[
+                        {'name': 'Stock Name', 'id': 'stock_name'},
+                        {'name': 'Close Price', 'id': 'close_price'},
+                        {'name': 'RSI Value', 'id': 'rsi_value'},
+                        {'name': 'SuperTrend', 'id': 'supertrend'},
+                    ],
+                    data=[],
+                    style_table={'overflowX': 'auto'},
+                    style_cell={'textAlign': 'left'},
+                    page_size=3  # Set page size to 3 for a 3-row table
+                ),
+            ], style={'width': '60%', 'display': 'inline-block'}),
+
+            html.Div(children=[
+                
+                # Table for displaying watchlist data
+                dash_table.DataTable(
+                    id='index-table',
+                    columns=[
+                        {'name': 'Index Name', 'id': 'stock_name'},
+                        {'name': 'Close Price', 'id': 'close_price'},
+                        {'name': 'RSI Value', 'id': 'rsi_value'},
+                        {'name': 'SuperTrend', 'id': 'supertrend'},
+                    ],
+                    data=[],
+                    style_table={'overflowX': 'auto'},
+                    style_cell={'textAlign': 'left'},
+                    page_size=3  # Set page size to 3 for a 3-row table
+                ),
             ], style={'width': '60%', 'display': 'inline-block'}),
         ])
     ])
@@ -84,7 +116,8 @@ app.layout = html.Div(children=[
 
 @app.callback(
     [dash.dependencies.Output('output-container', 'children'),
-     dash.dependencies.Output('log-container', 'children')],
+     dash.dependencies.Output('log-container', 'children'),
+     dash.dependencies.Output('watchlist-table', 'data')],
     [dash.dependencies.Input('submit-button', 'n_clicks'),
      dash.dependencies.Input('interval-component', 'n_intervals'),
      dash.dependencies.Input('portfolio-button', 'n_clicks'),
@@ -106,6 +139,25 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
     output = []
     log_output = [html.Li(entry) for entry in reversed(log_entries)]
     
+    # Update watchlist data
+    watchlist_data = []
+    for stock in watchlist_stocks:
+        try:
+            data = get_stock_data(stock)
+            closeprice = data.indicators["close"]
+            rsi15min = data.indicators["RSI"]
+            st = callAngelInd(anObj, stock)
+            strend_value = round(st['Supertrend_Value'], 2)
+
+            watchlist_data.append({
+                'stock_name': stock,
+                'close_price': closeprice,
+                'rsi_value': round(rsi15min, 2),
+                'supertrend': strend_value
+            })
+        except Exception as e:
+            print(f"Error fetching data for watchlist stock {stock}: {e}")
+
     # Update based on the button click for stock data
     if n_clicks > 0:
         try:
@@ -127,7 +179,7 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
         except Exception as e:
             output.append(f'Error fetching data for {value}: {e}')
 
-    return output, log_output
+    return output, log_output, watchlist_data
 
 if __name__ == '__main__':
     app.run_server(debug=True)
