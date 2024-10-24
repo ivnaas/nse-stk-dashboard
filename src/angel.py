@@ -120,7 +120,11 @@ def callAngelAPI():
 
 def callAngelInd(angelObj,symbolwo_suffix):
     print ("symbol: ",symbolwo_suffix)
-    symbol = symbolwo_suffix + "-EQ"
+    if (symbolwo_suffix == 'NIFTY') or (symbolwo_suffix == 'BANKNIFTY'):
+        symbol = symbolwo_suffix
+    else:
+        symbol = symbolwo_suffix + "-EQ"
+    
     print ("symbol: ",symbol)
 
     if angelObj:

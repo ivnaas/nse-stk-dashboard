@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  NSEDASH:
+    image: nse-dash:latest
+    volumes:
+      - log_data:/opt/apps/logs
+    restart: always
+#    logging:
+#      driver: awslogs
+#      options:
+#        awslogs-region: us-east-1
+#        awslogs-group: test
+#        awslogs-create-group: 'true'
+#        awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
+    environment:
+i      angel_apikey: <>
+      angel_username: <>
+      angel_passwd: <>
+      angel_token: <>
+volumes:
+  log_data: {}
+

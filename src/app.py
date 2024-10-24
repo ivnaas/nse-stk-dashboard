@@ -74,7 +74,7 @@ app.layout = html.Div(children=[
         dcc.Tab(label='Watchlist', children=[
             html.Div(children=[
                 html.H2('Watchlist'),
-                dcc.Textarea(id='watchlist-input', value='ABB,BAJAJFIN', style={'width': '100%', 'height': 100}),
+                dcc.Textarea(id='watchlist-input', value='ABB,BAJFINANCE', style={'width': '100%', 'height': 100}),
                 html.Button('Update Watchlist', id='watchlist-button', n_clicks=0),
                 
                 # Table for displaying watchlist data
@@ -99,7 +99,7 @@ app.layout = html.Div(children=[
                 dash_table.DataTable(
                     id='index-table',
                     columns=[
-                        {'name': 'Index Name', 'id': 'stock_name'},
+                        {'name': 'Index Name', 'id': 'index_name'},
                         {'name': 'Close Price', 'id': 'close_price'},
                         {'name': 'RSI Value', 'id': 'rsi_value'},
                         {'name': 'SuperTrend', 'id': 'supertrend'},
@@ -117,7 +117,9 @@ app.layout = html.Div(children=[
 @app.callback(
     [dash.dependencies.Output('output-container', 'children'),
      dash.dependencies.Output('log-container', 'children'),
-     dash.dependencies.Output('watchlist-table', 'data')],
+     dash.dependencies.Output('watchlist-table', 'data'),
+     dash.dependencies.Output('index-table', 'data'),
+     ],
     [dash.dependencies.Input('submit-button', 'n_clicks'),
      dash.dependencies.Input('interval-component', 'n_intervals'),
      dash.dependencies.Input('portfolio-button', 'n_clicks'),
@@ -158,6 +160,26 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
         except Exception as e:
             print(f"Error fetching data for watchlist stock {stock}: {e}")
 
+    # Update index data
+    indexlist_data = []
+    index_list = ['NIFTY','BANKNIFTY']
+    for index in index_list:
+        try:
+            data = get_stock_data(index)
+            closeprice = data.indicators["close"]
+            rsi15min = data.indicators["RSI"]
+            #st = callAngelInd(anObj, index)
+            #strend_value = round(st['Supertrend_Value'], 2)
+            strend_value = 0
+            indexlist_data.append({
+                'index_name': index,
+                'close_price': closeprice,
+                'rsi_value': round(rsi15min, 2),
+                'supertrend': strend_value
+            })
+        except Exception as e:
+            print(f"Error fetching data for index list {index}: {e}")
+
     # Update based on the button click for stock data
     if n_clicks > 0:
         try:
@@ -179,7 +201,7 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
         except Exception as e:
             output.append(f'Error fetching data for {value}: {e}')
 
-    return output, log_output, watchlist_data
+    return output, log_output, watchlist_data, indexlist_data
 
 if __name__ == '__main__':
     app.run_server(debug=True)
