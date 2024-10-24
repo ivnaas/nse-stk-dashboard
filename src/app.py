@@ -204,4 +204,5 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
     return output, log_output, watchlist_data, indexlist_data
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+#    app.run_server(debug=True)
+    app.run(host='0.0.0.0', port=8050)
