@@ -1,10 +1,12 @@
-version: "3.9"
+version: "3.3"
 
 services:
   NSEDASH:
     image: nse-dash:latest
     volumes:
       - log_data:/opt/apps/logs
+    ports:
+      - "8050:8050"
     restart: always
 #    logging:
 #      driver: awslogs
@@ -14,7 +16,7 @@ services:
 #        awslogs-create-group: 'true'
 #        awslogs-datetime-format: '\[%b %d, %Y %H:%M:%S\]'
     environment:
-i      angel_apikey: <>
+      angel_apikey: <>
       angel_username: <>
       angel_passwd: <>
       angel_token: <>
