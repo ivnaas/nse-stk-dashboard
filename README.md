@@ -22,3 +22,10 @@ doc ref# https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9
 #docker compose execution
 change to nse-stk-dashboard
 docker-compose up -d
+
+#install cron and start docker-compose on evrey reboot
+sudo dnf install cronie -y
+sudo systemctl enable crond
+sudo systemctl start crond
+crontab -e
+@reboot cd /home/ec2-user/nse-stk-dashboard && docker-compose up -d

@@ -107,11 +107,14 @@ def calculate_supertrend(ohlc_data, period=7, multiplier=3):
     
     # Get the last row
     last_row = ohlc_data.iloc[-1]
+    last_bone = ohlc_data.iloc[-2]
     
     return {
         'Last_Close': last_row['Close'],
         'Supertrend_Value': last_row['Supertrend'],
-        'Supertrend_Direction': last_row['Supertrend_Direction']
+        'Supertrend_Direction': last_row['Supertrend_Direction'],
+        'Strend_bone_Value': last_bone['Supertrend'],
+        'Strend_bone_Direction': last_bone['Supertrend_Direction']
     }
 
 def callAngelAPI():
@@ -149,11 +152,16 @@ def callAngelInd(angelObj,symbolwo_suffix):
             print(f"Last Close: {result['Last_Close']}")
             print(f"Supertrend Value: {result['Supertrend_Value']}")
             print(f"Supertrend Direction: {result['Supertrend_Direction']}")
+            print(f"Supertrend Butone Value: {result['Strend_bone_Value']}")
+            print(f"Supertrend Butone Direction: {result['Strend_bone_Direction']}")
+            
         else:
             print("Failed to retrieve OHLC data.")
     
     return  {
             'Supertrend_Value': result['Supertrend_Value'],
-            'Supertrend_Direction': result['Supertrend_Direction']
+            'Supertrend_Direction': result['Supertrend_Direction'],
+            'Strend_bone_Value': result['Strend_bone_Value'],
+            'Strend_bone_Direction': result['Strend_bone_Direction']
     }
 

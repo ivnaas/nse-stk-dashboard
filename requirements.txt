@@ -34,6 +34,7 @@ ta==0.10.1
 tenacity==9.0.0
 tradingview-ta==3.2.10
 typing_extensions==4.12.2
+twilio==9.3.6
 urllib3==2.2.3
 websocket-client==1.8.0
 Werkzeug==3.0.4
