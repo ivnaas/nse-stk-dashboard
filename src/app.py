@@ -265,4 +265,4 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
 
 if __name__ == '__main__':
     #send_notif('ABB',"RSI")
-    app.run_server(debug=True)
+    app.run(host='0.0.0.0', port=8050)
