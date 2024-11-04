@@ -103,7 +103,7 @@ app.layout = html.Div(children=[
         dcc.Tab(label='Watchlist', children=[
             html.Div(children=[
                 html.H2('Watchlist'),
-                dcc.Textarea(id='watchlist-input', value='ABB,BAJFINANCE', style={'width': '100%', 'height': 100}),
+                dcc.Textarea(id='watchlist-input', value='ABB,BAJFINANCE,BAJAJ-AUTO,MARUTI,ULTRACEMCO,INDIGO,KOTAKBANK', style={'width': '100%', 'height': 100}),
                 html.Button('Update Watchlist', id='watchlist-button', n_clicks=0),
                 
                 # Table for displaying watchlist data
@@ -114,6 +114,7 @@ app.layout = html.Div(children=[
                         {'name': 'Close Price', 'id': 'close_price'},
                         {'name': 'RSI Value', 'id': 'rsi_value'},
                         {'name': 'SuperTrend', 'id': 'supertrend'},
+			{'name': 'SuperTrend Direction', 'id': 'strend_direction'},
                     ],
                     data=[],
                     style_table={'overflowX': 'auto'},
@@ -132,6 +133,7 @@ app.layout = html.Div(children=[
                         {'name': 'Close Price', 'id': 'close_price'},
                         {'name': 'RSI Value', 'id': 'rsi_value'},
                         {'name': 'SuperTrend', 'id': 'supertrend'},
+			{'name': 'SuperTrend Direction', 'id': 'strend_direction'},
                     ],
                     data=[],
                     style_table={'overflowX': 'auto'},
@@ -186,6 +188,7 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
             rsi15min = data.indicators["RSI"]
             st = callAngelInd(anObj, stock)
             strend_value = round(st['Supertrend_Value'], 2)
+	    strend_direction = st['Supertrend_Direction']
             strend_bone_direction = st['Strend_bone_Direction']
             
             # Create log entry with IST timestamp
@@ -212,7 +215,8 @@ def update_output(n_clicks, n_intervals, portfolio_clicks, watchlist_clicks, val
                 'stock_name': stock,
                 'close_price': closeprice,
                 'rsi_value': round(rsi15min, 2),
-                'supertrend': strend_value
+                'supertrend': strend_value,
+		'strend_direction': strend_direction
             })
         except Exception as e:
             print(f"Error fetching data for watchlist stock {stock}: {e}")
