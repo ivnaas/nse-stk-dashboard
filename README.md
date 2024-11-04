@@ -23,6 +23,21 @@ doc ref# https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9
 change to nse-stk-dashboard
 docker-compose up -d
 
+#build docker image
+cd nse-stk-dashboard
+docker build -t nse-dash .
+docker images
+
+#create service and start on reboot
+
+vi /etc/systemd/system/dcompose.service
+systemctl start dcompose
+systectl status dcompose
+systemctl enable dcompose
+
+docker ps -a
+
+#another option to setup cron
 #install cron and start docker-compose on evrey reboot
 sudo dnf install cronie -y
 sudo systemctl enable crond

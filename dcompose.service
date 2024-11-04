@@ -1,0 +1,13 @@
+[Unit]
+Description=Docker Compose Application
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+WorkingDirectory=/home/ec2-user/nse-stk-dashboard
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target
