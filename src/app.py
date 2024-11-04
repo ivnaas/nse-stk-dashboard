@@ -22,10 +22,10 @@ alerts = [] # List to store alerts
 global anObj
 anObj = callAngelAPI()
 
-# Function to log stock data every 30 seconds
+# Function to log stock data every 180 seconds
 def log_stock_data():
     while True:
-        time.sleep(30)  # Sleep for 30 seconds
+        time.sleep(180)  # Sleep for 180 seconds
         for stock in portfolio_stocks:
             try:
                 data = get_stock_data(stock)
