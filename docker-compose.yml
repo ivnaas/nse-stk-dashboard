@@ -20,6 +20,12 @@ services:
       angel_username: <>
       angel_passwd: <>
       angel_token: <>
+      account_sid: <>
+      auth_token: <>
+      to_ph: <>
+      from_ph: <>
+      messaging_service_sid: <>
+      content_template_sid: <>
 volumes:
   log_data: {}
 
